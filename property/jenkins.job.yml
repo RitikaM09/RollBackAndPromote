@@ -1,0 +1,8 @@
+stages :
+
+    health :
+       rollback_deployment_on_fail: true
+       block_promote_on_fail: true
+       
+       builds :
+         
