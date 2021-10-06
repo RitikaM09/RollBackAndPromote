@@ -1,5 +1,8 @@
 @Library("local-shared-library") _
 import groovy.transform.Field
+def gitUrl=GITURL
+def branch = BRANCH
+def projectDir=PROJECT_DIRECTORY
 
 pipeline {
     agent any
