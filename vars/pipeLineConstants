@@ -1,0 +1,8 @@
+@Field final PROJECT_DIR_REGEX = "[a-zA-Z].*"
+@Field final AJEX_ROLLBACK_KEY="rollback_deployment_on_fail"
+@Field final AJEX_PROMOTE_KEY="block_promote_on_fail"
+@Field final AJEX_YML_FILE_NAME ="jenkins.job.yml"
+@Field final STAGES="stages"
+@Field final FILE_NOT_FOUND = "Not Found"
+@Field final ROLLBACK_KEY="Rollback"
+@Field final PROMOTE_KEY="Promote"
