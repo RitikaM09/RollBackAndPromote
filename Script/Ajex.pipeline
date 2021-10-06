@@ -1,0 +1,26 @@
+@Library("local-shared-library") _
+import groovy.transform.Field
+
+pipeline {
+    agent any
+    stages {
+	stage('Init')
+	{
+        steps {
+               script 
+               {
+               
+               try {
+			        			rollbackStageList = pipelineUtil.getPromoteRollbackStageList("rollback",GITURL,BRANCH,PROJECT_DIRECTORY)
+			        			printMessage("AJEX-Info value of rollback list is: "+rollbackStageList)
+	        					promoteStageList = pipelineUtil.getPromoteRollbackStageList("promote",GITURL,BRANCH,PROJECT_DIRECTORY)
+	        					printMessage("AJEX-Info value of promoe list is: "+promoteStageList)
+	     				}
+				    	catch(e){
+						        currentStageResult="FAIL"
+						         errorList.add("Error while getting rollback stage")
+				  	}
+            }
+            }
+            }
+            }
