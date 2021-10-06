@@ -1,1 +1,44 @@
+def loadAjexYml(gitURL,branch,projectDir)
+{
+    try {
+        projectDir=(projectDir!=null && !projectDir.toString().matches(pipeLineConstants.PROJECT_DIR_REGEX)||projectDir==null)?"":projectDir
+        projectDir= projectDir.endsWith("/")?projectDir:projectDir+"/"
+	hyperloopGit.getGitFileThroughCurl(hyperloopGit.getGitOrgName(gitUrl), hyperloopGit.getGitRepoName(gitUrl), branch, projectDir, pipeLineConstants.AJEX_YML_FILE_NAME)
+        def text = readFile file: pipeLineConstants.AJEX_YML_FILE_NAME
+	 if(text.toString().contains(pipeLineConstants.FILE_NOT_FOUND.toString().trim())){
+            error("Ajex Validation: Jenkins.job.yml is not present in service repo")
+	    return 
+        }    
+	def AjexYml = readYaml text:  text    
+	return AjexYml
+    } catch(e) {
+        println "Error occured while checking the file"+e
 
+    }
+}
+
+def getPromoteRollbackStageList(actionType,gitURL,branch,projectDir)
+{
+    def AjexYml = loadAjexYml(gitURL,branch,projectDir)
+    List <String> stagelist = new ArrayList<String>()
+    def key
+    boolean stageToadd=false
+    if(!(actionType.equalsIgnoreCase(pipeLineConstants.ROLLBACK_KEY)||actionType.equalsIgnoreCase(pipeLineConstants.PROMOTE_KEY))){
+        println "Invalid value of action Type is passed empty list will be returned"
+        return stagelist
+    }
+    else if(actionType.equalsIgnoreCase(pipeLineConstants.ROLLBACK_KEY))
+        key=pipeLineConstants.AJEX_ROLLBACK_KEY
+    else if(actionType.equalsIgnoreCase(pipeLineConstants.PROMOTE_KEY))
+        key=pipeLineConstants.AJEX_PROMOTE_KEY
+    def stages =readFromYMLWithKey(AjexYml,pipeLineConstants.STAGES)
+    stages.each{
+	stageToadd = it.value[key]    
+        if(stageToadd)
+            stagelist.add(it.key)
+
+    }
+    return stagelist
+
+    
+}
